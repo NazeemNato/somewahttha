@@ -1,19 +1,23 @@
-const data = require('../data')
+const EmployeeData = require("../model/employee");
 const resolver = {
-    Query: {
-        details: () => data
+  Query: {
+    details: async () => {
+      const data = await EmployeeData.find();
+      return data;
     },
-    Mutation: {
-        newEmployee: async (_, args) => {
-            const { name, department, age, joinedYear } = args
-            data.push({
-                name,
-                department,
-                age,
-                joinedYear
-            })
-            return { name, department, age, joinedYear }
-        }
-    }
-}
-module.exports =  resolver
+  },
+  Mutation: {
+    newEmployee: async (_, args) => {
+      const { name, department, age, joinedYear } = args;
+      const data = EmployeeData({
+        name,
+        department,
+        age,
+        joinedYear,
+      });
+      const save = await data.save();
+      return save;
+    },
+  },
+};
+module.exports = resolver;
